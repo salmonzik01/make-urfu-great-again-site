@@ -10,7 +10,7 @@ select.title = "Choose program"
 app.appendChild(select)
 
 for (let programName of programsNames) {
-  select.innerHTML += `<option value="${programName}">${programName!.split('.')[0]}</option>`
+  select.innerHTML += `<option value="${programName}">${programName?.split('.')[0]}</option>`
 }
 
 const table = document.createElement('table')
