@@ -2,9 +2,9 @@ import './style.css'
 
 const programs = import.meta.glob('./programs/*.json');
 // @ts-ignore
-const programsNames = Object.keys(programs).map(v => v.split('/').at(-1));
-
-//
+const programsNames = Object.keys(programs).map(v => {
+  return [v, v.split('/').at(-1)];
+});
 
 // const app = document.querySelector<HTMLDivElement>('#app')!;
 const select = document.querySelector<HTMLSelectElement>('.chooseProgram')!;
@@ -36,7 +36,7 @@ budget.addEventListener('change', (_e: Event) => {
 
 
 for (let programName of programsNames) {
-  select.innerHTML += `<option value="${programName}">${programName!.split('.')[0]}</option>`
+  select.innerHTML += `<option value="${programName[0]}">${programName[1]!.split('.')[0]}</option>`
 }
 
 select.addEventListener('change', async (_e) => {
@@ -53,7 +53,8 @@ select.addEventListener('change', async (_e) => {
     <tr>
   `
 
-  const program = await import(/* @vite-ignore */`./programs/${select.value.split('.')[0]}.json`);
+  const program = await programs[select.value]();
+  // @ts-ignore
   const entrants = program.default.sort((a: any, b: any) => b.total_mark - a.total_mark);
 
   tableBody.innerHTML = ''
