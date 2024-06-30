@@ -4,6 +4,8 @@ const programs = import.meta.glob('./programs/*.json');
 // @ts-ignore
 const programsNames = Object.keys(programs).map(v => v.split('/').at(-1));
 
+//
+
 // const app = document.querySelector<HTMLDivElement>('#app')!;
 const select = document.querySelector<HTMLSelectElement>('.chooseProgram')!;
 
