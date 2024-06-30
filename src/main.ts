@@ -1,7 +1,10 @@
 import './style.css'
 
 const programs = import.meta.glob('./programs/*.json');
-const programsNames = Object.keys(programs).map(v => v.split('/')[v.length-1]);
+const programsNames = Object.keys(programs).map(v => {
+  const vv = v.split('/')
+  return vv[vv.length - 1]
+});
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
 const select = document.createElement('select')
@@ -10,6 +13,7 @@ select.title = "Choose program"
 app.appendChild(select)
 
 for (let programName of programsNames) {
+  console.log(programName)
   select.innerHTML += `<option value="${programName}">${programName?.split('.')[0]}</option>`
 }
 
