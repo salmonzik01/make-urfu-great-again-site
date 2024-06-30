@@ -1,79 +1,76 @@
 import './style.css'
 
 const programs = import.meta.glob('./programs/*.json');
-const programsNames = Object.keys(programs).map(v => {
-  const vv = v.split('/')
-  return vv[vv.length - 1]
-});
+// @ts-ignore
+const programsNames = Object.keys(programs).map(v => v.split('/').at(-1));
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
-const select = document.createElement('select')
-select.id = "chooseProgram";
-select.title = "Choose program"
-app.appendChild(select)
+const select = document.querySelector<HTMLSelectElement>('.chooseProgram')!;
+
+const table = document.querySelector<HTMLTableElement>('.entrants')!
+const tableHead = document.createElement('thead'); table.appendChild(tableHead);
+const tableBody = document.createElement('tbody'); table.appendChild(tableBody);
+
+let goalC = false,
+  originalC = false,
+  budgetC = false;
+
+const goal = document.querySelector<HTMLInputElement>('.goal')!;
+const original = document.querySelector<HTMLInputElement>('.original')!;
+const budget = document.querySelector<HTMLInputElement>('.budget')!;
+
+goal.addEventListener('change', (e) => {
+  goalC = goal.checked;
+  select.dispatchEvent(new Event('change'));
+});
+original.addEventListener('change', (e) => {
+  originalC = original.checked;
+  select.dispatchEvent(new Event('change'));
+});
+budget.addEventListener('change', (e) => {
+  budgetC = budget.checked;
+  select.dispatchEvent(new Event('change'));
+});
+
 
 for (let programName of programsNames) {
-  select.innerHTML += `<option value="${programName}">${programName?.split('.')[0]}</option>`
+  select.innerHTML += `<option value="${programName}">${programName!.split('.')[0]}</option>`
 }
 
-const table = document.createElement('table')
-app.append(table);
-
-
 select.addEventListener('change', async (_e) => {
-  table.innerHTML = `
-  <tr>
-    <td>Номер</td>
-    <td>СНИЛС</td>
-    <td>Бал ЕГЭ</td>
-    <td>Оригиналы?</td>
-    <td>Приоритет</td>
-    <td>Статус</td>
-    <td>Компетенция</td>
-    <td>Компенсация</td>
-  <tr>
-`
+  tableHead.innerHTML = `
+    <tr>
+        <td>Номер</td>
+        <td>СНИЛС</td>
+        <td>Бал ЕГЭ</td>
+        <td>Оригиналы?</td>
+        <td>Приоритет</td>
+        <td>Статус</td>
+        <td>Компетенция</td>
+        <td>Компенсация</td>
+    <tr>
+  `
 
-  const program = await import(/* @vite-ignore */`./${select.value}`);
+  const program = await import(/* @vite-ignore */`./programs/${select.value}`);
   const entrants = program.default.sort((a: any, b: any) => b.total_mark - a.total_mark);
-  // console.log("entratns", entrants)
-
+  
+  tableBody.innerHTML = ''
   for (let entrant of entrants) {
-    table.innerHTML += `
+    if (goalC && entrant.competition === 'Целевая квота') continue;
+    if (originalC && !entrant.original) continue;
+    if (budgetC && entrant.compensation !== 'бюджетная основа') continue;
+
+    tableBody.innerHTML += `
       <tr>
         <td>${entrant.regnum}</td>
         <td>${entrant.snils}</td>
         <td>${entrant.total_mark}</td>
-        <td>${entrant.original}</td>
+        <td>${entrant.original ? 'Да' : 'Нет'}</td>
         <td>${entrant.priority}</td>
         <td>${entrant.status}</td>
         <td>${entrant.competition}</td>
         <td>${entrant.compensation}</td>
-      <tr>
+      </tr>
     `
   }
 });
-
-// import typescriptLogo from './typescript.svg'
-// import viteLogo from '/vite.svg'
-// import { setupCounter } from './counter.ts'
-
-// document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-//   <div>
-//     <a href="https://vitejs.dev" target="_blank">
-//       <img src="${viteLogo}" class="logo" alt="Vite logo" />
-//     </a>
-//     <a href="https://www.typescriptlang.org/" target="_blank">
-//       <img src="${typescriptLogo}" class="logo vanilla" alt="TypeScript logo" />
-//     </a>
-//     <h1>Vite + TypeScript</h1>
-//     <div class="card">
-//       <button id="counter" type="button"></button>
-//     </div>
-//     <p class="read-the-docs">
-//       Click on the Vite and TypeScript logos to learn more
-//     </p>
-//   </div>
-// `
-
-// setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
