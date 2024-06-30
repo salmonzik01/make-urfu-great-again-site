@@ -9,7 +9,7 @@
         <td>Компетенция</td>
         <td>Компенсация</td>
     <tr>
-  `;const E=(await _(()=>import(`./${n.value}`),[])).default.sort((t,o)=>o.total_mark-t.total_mark);d.innerHTML="";for(let t of E)I&&t.competition==="Целевая квота"||T&&!t.original||A&&t.compensation!=="бюджетная основа"||(d.innerHTML+=`
+  `;const E=(await _(()=>import(`./programs/${n.value.split(".")[0]}.json`),[])).default.sort((t,o)=>o.total_mark-t.total_mark);d.innerHTML="";for(let t of E)I&&t.competition==="Целевая квота"||T&&!t.original||A&&t.compensation!=="бюджетная основа"||(d.innerHTML+=`
       <tr>
         <td>${t.regnum}</td>
         <td>${t.snils}</td>
