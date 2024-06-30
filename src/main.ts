@@ -53,7 +53,7 @@ select.addEventListener('change', async (_e) => {
     <tr>
   `
 
-  const program = await import(/* @vite-ignore */`./programs/${select.value}`);
+  const program = await import(/* @vite-ignore */`./programs/${select.value.split('.')[0]}.json`);
   const entrants = program.default.sort((a: any, b: any) => b.total_mark - a.total_mark);
 
   tableBody.innerHTML = ''
