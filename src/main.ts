@@ -13,7 +13,6 @@ select.title = "Choose program"
 app.appendChild(select)
 
 for (let programName of programsNames) {
-  console.log(programName)
   select.innerHTML += `<option value="${programName}">${programName?.split('.')[0]}</option>`
 }
 
