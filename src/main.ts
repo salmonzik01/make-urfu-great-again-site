@@ -34,7 +34,7 @@ select.addEventListener('change', async (_e) => {
   <tr>
 `
 
-  const program = await import(/* @vite-ignore */`./programs/${select.value}`);
+  const program = await import(/* @vite-ignore */`./${select.value}`);
   const entrants = program.default.sort((a: any, b: any) => b.total_mark - a.total_mark);
   // console.log("entratns", entrants)
 
