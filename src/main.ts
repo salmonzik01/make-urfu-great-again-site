@@ -4,7 +4,7 @@ const programs = import.meta.glob('./programs/*.json');
 // @ts-ignore
 const programsNames = Object.keys(programs).map(v => v.split('/').at(-1));
 
-const app = document.querySelector<HTMLDivElement>('#app')!;
+// const app = document.querySelector<HTMLDivElement>('#app')!;
 const select = document.querySelector<HTMLSelectElement>('.chooseProgram')!;
 
 const table = document.querySelector<HTMLTableElement>('.entrants')!
@@ -15,19 +15,19 @@ let goalC = false,
   originalC = false,
   budgetC = false;
 
-const goal = document.querySelector<HTMLInputElement>('.goal')!;
-const original = document.querySelector<HTMLInputElement>('.original')!;
-const budget = document.querySelector<HTMLInputElement>('.budget')!;
+const goal = document.querySelector<HTMLInputElement>('.goal')!,
+  original = document.querySelector<HTMLInputElement>('.original')!,
+  budget = document.querySelector<HTMLInputElement>('.budget')!;
 
-goal.addEventListener('change', (e) => {
+goal.addEventListener('change', (_e: Event) => {
   goalC = goal.checked;
   select.dispatchEvent(new Event('change'));
 });
-original.addEventListener('change', (e) => {
+original.addEventListener('change', (_e: Event) => {
   originalC = original.checked;
   select.dispatchEvent(new Event('change'));
 });
-budget.addEventListener('change', (e) => {
+budget.addEventListener('change', (_e: Event) => {
   budgetC = budget.checked;
   select.dispatchEvent(new Event('change'));
 });
@@ -42,7 +42,7 @@ select.addEventListener('change', async (_e) => {
     <tr>
         <td>Номер</td>
         <td>СНИЛС</td>
-        <td>Бал ЕГЭ</td>
+        <td>Балл ЕГЭ</td>
         <td>Оригиналы?</td>
         <td>Приоритет</td>
         <td>Статус</td>
@@ -53,7 +53,7 @@ select.addEventListener('change', async (_e) => {
 
   const program = await import(/* @vite-ignore */`./programs/${select.value}`);
   const entrants = program.default.sort((a: any, b: any) => b.total_mark - a.total_mark);
-  
+
   tableBody.innerHTML = ''
   for (let entrant of entrants) {
     if (goalC && entrant.competition === 'Целевая квота') continue;
