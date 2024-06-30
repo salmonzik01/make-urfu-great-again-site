@@ -1,8 +1,8 @@
 import './style.css'
 
 const programs = import.meta.glob('./programs/*.json');
-// @ts-ignore
 const programsNames = Object.keys(programs).map(v => {
+  // @ts-ignore
   return [v, v.split('/').at(-1)];
 });
 
